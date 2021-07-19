@@ -1,4 +1,4 @@
-from entries.request import delete_entry, get_entry_by_id, get_all_entries
+from entries.request import delete_entry, find_entry_by_keyword, get_entry_by_id, get_all_entries
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
@@ -21,18 +21,25 @@ class HandleRequests(BaseHTTPRequestHandler):
         """
         path_params = path.split("/")
         resource = path_params[1]
-        id = None
-        # Try to get the item at index 2
-        try:
-            # Convert the string "1" to the integer 1
-            # This is the new parseInt()
-            id = int(path_params[2])
-        except IndexError:
-            pass
-        except ValueError:
-            pass
+        if "?" in resource:
+            # GIVEN: /customers?email=jenna@solis.com
+            param = resource.split("?")[1]  # email=jenna@solis.com
+            resource = resource.split("?")[0]  # 'customers'
+            pair = param.split("=")  # [ 'email', 'jenna@solis.com' ]
+            key = pair[0]  # 'email'
+            value = pair[1]  # 'jenna@solis.com'
+            return ( resource, key, value )
 
-        return (resource, id)  # This is a tuple
+        # No query string parameter
+        else:
+            id = None
+            try:
+                id = int(path_params[2])
+            except IndexError:
+                pass  # No route parameter exists: /animals
+            except ValueError:
+                pass  # Request had trailing slash: /animals/
+            return (resource, id)
 
     # Here's a class function
     def _set_headers(self, status):
@@ -65,16 +72,21 @@ class HandleRequests(BaseHTTPRequestHandler):
         """performs GET function"""
         self._set_headers(200)
         response = {}  # Default response
+        parsed_url = self.parse_url(self.path)
 
-        # Parse the URL and capture the tuple that is returned
-        (resource, id) = self.parse_url(self.path)
-
-        if resource == "entries":
-            if id is not None:
-                response = f"{get_entry_by_id(id)}"
-            else:
-                response = f"{get_all_entries()}"
-
+        if len(parsed_url) == 2:
+            (resource, id) = parsed_url
+            if resource == "entries":
+                if id is not None:
+                    response = f"{get_entry_by_id(id)}"
+                else:
+                    response = f"{get_all_entries()}"
+        elif len(parsed_url) == 3:
+            ( resource, key, value ) = parsed_url
+            if key == "q" and resource == "entries":
+                # pass in value to SQL database search
+                response = f"{find_entry_by_keyword(value)}"
+        
         self.wfile.write(response.encode())
 
     # # Here's a method on the class that overrides the parent's method.
