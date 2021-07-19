@@ -70,11 +70,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         (resource, id) = self.parse_url(self.path)
 
         if resource == "entries":
-            if id is not None:
-                pass
-                # response = f"{get_single_animal(id)}"
-            else:
-                response = f"{get_all_entries()}"
+            response = f"{get_all_entries()}"
 
         self.wfile.write(response.encode())
 

@@ -11,16 +11,16 @@ def get_all_entries():
         SELECT
             a.id,
             a.title,
-            a.text,
-            a.time_stamp
-        FROM entry a
+            a.entry,
+            a.timestamp
+        FROM entries a
         """)
 
         entries = []
         dataset = db_cursor.fetchall()
 
         for row in dataset:
-            entry = Entry(row['id'], row['title'], row['text'], row['time_stamp'])
+            entry = Entry(row['id'], row['title'], row['entry'], row['timestamp'])
             entries.append(entry.__dict__)
     
     return json.dumps(entries)
