@@ -1,4 +1,4 @@
-from entries.request import get_entry_by_id, get_all_entries
+from entries.request import delete_entry, get_entry_by_id, get_all_entries
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
@@ -118,19 +118,19 @@ class HandleRequests(BaseHTTPRequestHandler):
     #     self.wfile.write("".encode())
 
 
-    # def do_DELETE(self):
-    #     # Set a 204 response code
-    #     self._set_headers(204)
+    def do_DELETE(self):
+        # Set a 204 response code
+        self._set_headers(204)
 
-    #     # Parse the URL
-    #     (resource, id) = self.parse_url(self.path)
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
 
-    #     # Delete a single animal from the list
-    #     if resource == "entries":
-    #         # delete_animal(id)
+        # Delete a single animal from the list
+        if resource == "entries":
+            delete_entry(id)
 
-    #     # Encode the new animal and send in response
-    #     self.wfile.write("".encode())
+        # Encode the new animal and send in response
+        self.wfile.write("".encode())
 
 # This function is not inside the class. It is the starting
 # point of this application.

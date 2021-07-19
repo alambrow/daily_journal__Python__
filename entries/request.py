@@ -43,3 +43,12 @@ def get_entry_by_id(id):
         row = db_cursor.fetchone()
         entry = Entry(row['id'], row['title'], row['entry'], row['timestamp'])
         return json.dumps(entry.__dict__)
+
+def delete_entry(id):
+    with sqlite3.connect("./dailyjournal.db") as taco:
+        database_cursor = taco.cursor()
+
+        database_cursor.execute("""
+        DELETE FROM entries
+        WHERE id = ?
+        """, (id, ))
