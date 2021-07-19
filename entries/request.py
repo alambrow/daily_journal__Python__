@@ -24,3 +24,22 @@ def get_all_entries():
             entries.append(entry.__dict__)
     
     return json.dumps(entries)
+
+def get_entry_by_id(id):
+    with sqlite3.connect("./dailyjournal.db") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        SELECT
+            a.id,
+            a.title,
+            a.entry,
+            a.timestamp
+        FROM entries a
+        WHERE a.id = ?
+        """, (id, ))
+
+        row = db_cursor.fetchone()
+        entry = Entry(row['id'], row['title'], row['entry'], row['timestamp'])
+        return json.dumps(entry.__dict__)
