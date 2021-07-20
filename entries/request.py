@@ -55,17 +55,17 @@ def delete_entry(id):
 
 def find_entry_by_keyword(searchTerm):
     with sqlite3.connect("./dailyjournal.db") as conn:
-        searchT = searchTerm
+        
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
-        db_cursor.execute("""
+        db_cursor.execute(f"""
         SELECT
             a.id,
             a.title,
             a.entry,
             a.timestamp
         FROM entries a
-        WHERE entry LIKE '%{searchT}%';
+        WHERE entry LIKE "%{searchTerm}%";
         """)
         entries = []
         dataset = db_cursor.fetchall()

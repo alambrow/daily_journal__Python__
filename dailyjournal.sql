@@ -20,3 +20,12 @@ INSERT INTO 'Moods' VALUES (null, 'trying to keep up the pace', 1);
 
 SELECT * FROM Entries;
 SELECT * FROM Moods;
+
+
+        SELECT
+            a.id,
+            a.title,
+            a.entry,
+            a.timestamp
+        FROM entries a
+        WHERE entry LIKE "%earn%"
