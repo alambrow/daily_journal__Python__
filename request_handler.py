@@ -22,15 +22,12 @@ class HandleRequests(BaseHTTPRequestHandler):
         path_params = path.split("/")
         resource = path_params[1]
         if "?" in resource:
-            # GIVEN: /customers?email=jenna@solis.com
-            param = resource.split("?")[1]  # email=jenna@solis.com
-            resource = resource.split("?")[0]  # 'customers'
-            pair = param.split("=")  # [ 'email', 'jenna@solis.com' ]
-            key = pair[0]  # 'email'
-            value = pair[1]  # 'jenna@solis.com'
+            param = resource.split("?")[1]  
+            resource = resource.split("?")[0]  
+            pair = param.split("=")  
+            key = pair[0]  
+            value = pair[1]  
             return ( resource, key, value )
-
-        # No query string parameter
         else:
             id = None
             try:
