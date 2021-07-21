@@ -97,3 +97,23 @@ def create_journal_entry(new_entry):
         new_id = db_cursor.lastrowid
         new_entry['id'] = new_id
     return json.dumps(new_entry)
+
+def update_entry(id, post_body):
+    with sqlite3.connect("./dailyjournal.db") as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+        UPDATE Entries
+            SET
+                title = ?,
+                entry = ?,
+                timestamp = ?,
+                moodId = ?
+        WHERE id = ?
+        """, (post_body['title'], post_body['entry'], post_body['timestamp'], post_body['moodId'], id, ))
+        rows_affected = cursor.rowcount
+        if rows_affected == 0:
+            # forces 404 response in main module
+            return False
+        else:
+            # forces 204 response
+            return True 

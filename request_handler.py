@@ -1,4 +1,4 @@
-from entries.request import delete_entry, find_entry_by_keyword, get_entry_by_id, get_all_entries, create_journal_entry
+from entries.request import delete_entry, find_entry_by_keyword, get_entry_by_id, get_all_entries, create_journal_entry, update_entry
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
@@ -107,21 +107,23 @@ class HandleRequests(BaseHTTPRequestHandler):
             new_entry = create_journal_entry(post_body)
             self.wfile.write(f"{new_entry}".encode())
 
-    # def do_PUT(self):
-    #     self._set_headers(204)
-    #     content_len = int(self.headers.get('content-length', 0))
-    #     post_body = self.rfile.read(content_len)
-    #     post_body = json.loads(post_body)
+    def do_PUT(self):
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
 
-    #     # Parse the URL
-    #     (resource, id) = self.parse_url(self.path)
+        (resource, id) = self.parse_url(self.path)
 
-    #     # Delete a single animal from the list
-    #     if resource == "entries":
-    #         # update_animal(id, post_body)
+        success = False
+        if resource == "entries":
+            success = update_entry(id, post_body)
 
-    #     # Encode the new animal and send in response
-    #     self.wfile.write("".encode())
+        if success:
+            self._set_headers(204)
+        else:
+            self._set_headers(404)
+
+        self.wfile.write("".encode())
 
 
     def do_DELETE(self):
