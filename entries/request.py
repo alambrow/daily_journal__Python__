@@ -88,7 +88,7 @@ def find_entry_by_keyword(searchTerm):
 def create_journal_entry(new_entry):
     with sqlite3.connect("./dailyjournal.db") as conn:
         db_cursor = conn.cursor()
-        db_cursor.excute("""
+        db_cursor.execute("""
         INSERT INTO Entries
             ( title, entry, timestamp, moodId)
         VALUES
