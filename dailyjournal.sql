@@ -19,6 +19,13 @@ INSERT INTO 'Entries' VALUES (null, 'Learning SQL', 'Learning about basic comman
 INSERT INTO 'Moods' VALUES (null, 'trying to keep up the pace');
 INSERT INTO 'Moods' VALUES (null, 'brainded');
 
+INSERT INTO Entries
+    ( title, entry, timestamp, moodId )
+VALUES
+    ( "Learning Python", "Figuring out serverz", "21 July 2021", 1)
+;
+
+
 SELECT * FROM Entries;
 SELECT * FROM Moods;
 

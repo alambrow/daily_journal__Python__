@@ -1,4 +1,4 @@
-from entries.request import delete_entry, find_entry_by_keyword, get_entry_by_id, get_all_entries
+from entries.request import delete_entry, find_entry_by_keyword, get_entry_by_id, get_all_entries, create_journal_entry
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
@@ -22,8 +22,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         path_params = path.split("/")
         resource = path_params[1]
         if "?" in resource:
-            param = resource.split("?")[1]  
             resource = resource.split("?")[0]  
+            param = resource.split("?")[1]  
             pair = param.split("=")  
             key = pair[0]  
             value = pair[1]  
@@ -88,27 +88,24 @@ class HandleRequests(BaseHTTPRequestHandler):
 
     # # Here's a method on the class that overrides the parent's method.
     # # It handles any POST request.
-    # def do_POST(self):
-    #     """Handles POST requests to the server
-    #     """
-    #     self._set_headers(201)
-    #     content_len = int(self.headers.get('content-length', 0))
-    #     post_body = self.rfile.read(content_len)
+    def do_POST(self):
+        """Handles POST requests to the server
+        """
+        self._set_headers(201)
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
 
-    #     # Convert JSON string to a Python dictionary
-    #     post_body = json.loads(post_body)
+        # Convert JSON string to a Python dictionary
+        post_body = json.loads(post_body)
 
-    #     # Parse the URL
-    #     (resource, id) = self.parse_url(self.path)
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
 
-    #     # Initializations
-    #     new_animal = None
-    #     # Add a new animal to the list. Don't worry about
-    #     # the orange squiggle, you'll define the create_animal
-    #     # function next.
-    #     if resource == "entries":
-    #         # new_animal = create_animal(post_body)
-    #         # self.wfile.write(f"{new_animal}".encode())
+        # Initializations
+        new_entry = None
+        if resource == "entries":
+            new_entry = create_journal_entry(post_body)
+            self.wfile.write(f"{new_entry}".encode())
 
     # def do_PUT(self):
     #     self._set_headers(204)
